@@ -2,3 +2,15 @@
     max-height: 250px;
     overflow: scroll;
 }
+
+.sketch {
+  background-color: lightblue
+}
+
+.draw {
+  background-color: lightgreen;
+}
+
+.paint {
+  background-color: pink;
+}

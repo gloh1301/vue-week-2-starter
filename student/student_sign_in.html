@@ -10,10 +10,14 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" v-cloak>
 
 
-        <!-- TODO show errors from form validation -->
+        <div class="alert alert-danger" v-if="errors.length > 0">
+          <ul>
+            <li v-for="error in errors">{{ error }}</li>
+          </ul>
+        </div>
 
 
         <div class="card add-student m-2 p-2">
@@ -21,16 +25,14 @@
 
             <div class="form-group">
                 <label for="name">Name</label>
-                <!-- TODO v-model newStudentName -->
-                <input id="name" class="form-control">
+                <input id="name" class="form-control" v-model.trim="newStudentName">
             </div>
             <div class="form-group">
                 <label for="starID">Star ID</label>
-                <!-- TODO v-model newStarID -->
-                <input id="starID" class="form-control">
+                <input id="starID" class="form-control" v-model.trim="newStarID">
             </div>
-            <!-- TODO v-on:click event handler -->
-            <button class="btn btn-primary">Add</button>
+
+            <button class="btn btn-primary" v-on:click="addStudent">Add</button>
         </div>
 
         <div class="card student-list m-2 p-2">
@@ -43,31 +45,89 @@
                         <th>Present?</th>
                     </tr>
 
-                   <!-- TODO create table rows 
-                   Each row will have a checkbox, bound to the app's data 
-                   When the checkbox is checked/unchecked, the student will be signed in/out -->
+                   <tr v-for="student in students" v-bind:class="{present: student.present, absent: !student.present}">
+                     <td>{{ student.name }}</td>
+                     <td>{{ student.starID }}</td>
+                     <td>
+                       <input type="checkbox" v-model="student.present" v-on:change="arrivedOrLeft(student)">
+                     </td>
+                   </tr>
 
                 </table>
             </div>
         </div>
 
+        <div v-if="mostRecentStudent.name">
 
-        <!-- TODO show a message when student arrives or leaves  -->
+          <div class="alert alert-info" v-if="mostRecentStudent.present">
+            Welcome, {{ mostRecentStudent.name }}
+          </div>
 
+          <div class="alert alert-success" v-else>
+            Goodbye, {{ mostRecentStudent.name }}. See you later!
+          </div>
+
+        </div>
 
     </div>
 
     <script>
 
+      let app = Vue.createApp({
+        data() {
+          return {
+            newStudentName: '',
+            newStarID: '',
+            students: [
+              { name: 'A. Student', starID: 'aa1234bb', present: false },
+              { name: 'B. Student', starID: 'cc5678dd', present: false }
+            ],
+            errors: [],
+            mostRecentStudent: {}
+          }
+        },
+        methods: {
+          addStudent() {
 
-        // TODO Vue app     
+            this.errors = []
 
+            if (!this.newStudentName) {
+              this.errors.push('Must enter a student name')
+            }
+
+            if (!this.newStarID) {
+              this.errors.push('Must enter a starID')
+            }
+
+            if (this.errors.length == 0) {
+              let student = { name: this.newStudentName, starID: this.newStarID, present: false }
+              this.students.push(student)
+              this.newStudentName = ''
+              this.newStarID = ''
+
+              this.students.sort(function(s1, s2) {
+                if (s1.name.toUpperCase() > s2.name.toUpperCase()) {
+                  return 1
+                }
+
+                if (s1.name.toUpperCase() < s2.name.toUpperCase()) {
+                  return -1
+                }
+
+                return 0
+              })
+            }
+          },
+          arrivedOrLeft(student) {
+            this.mostRecentStudent = student
+          }
+        }
+      })
+
+      app.mount('#app')
 
     </script>
 
 </body>
 
 </html>
-
-
-                
