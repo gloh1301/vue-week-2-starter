@@ -3,14 +3,14 @@
     overflow: scroll;
 }
 
-.sketch {
+.Sketching {
   background-color: lightblue
 }
 
-.draw {
+.Drawing {
   background-color: lightgreen;
 }
 
-.paint {
+.Painting {
   background-color: pink;
 }

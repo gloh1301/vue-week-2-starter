@@ -94,7 +94,7 @@
                 <h3>{{ totalRecordsMessage }}</h3>
 
                 <div id="records">
-                    <table class="table table-hover">
+                    <table class="table">
                         <tr>
                             <th>Date</th>
                             <th>How many hours?</th>
@@ -105,8 +105,7 @@
                         </tr>
 
 <!-- binds the classes to the table values to apply the styles from the style sheet -->
-<!-- not sure why mine is not binding here -->
-                        <tr v-for="record in activityRecords" v-bind:class="{sketch: record.sketch, draw: record.draw, paint: record.paint}">
+                        <tr v-for="record in activityRecords" v-bind:class="record.type">
                           <td>{{ shortDate(record.date) }}</td>
                           <td>{{ record.hours }}</td>
                           <td>{{ record.type }}</td>
@@ -152,8 +151,8 @@
 
                     types: [ 'Sketching', 'Drawing', 'Painting' ],
 
-                    // sets complete as boolean
-                    complete: Boolean,
+                    // sets complete as a boolean value
+                    complete: true,
 
                     errors: []
                 }
@@ -209,12 +208,10 @@
                   },
 
                 // adds completed or not completed depending on if box is checked or not
-                // not sure why it only shows it as completed everytime
                 completed(complete) {
-                  if (this.complete = true) {
+                  if (complete == true) {
                     return 'Completed'
-                  }
-                  if (this.complete = false) {
+                  } else {
                     return 'Not completed'
                   }
                 }
